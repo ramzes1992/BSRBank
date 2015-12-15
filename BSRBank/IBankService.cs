@@ -20,10 +20,16 @@ namespace BSRBank
         string LogIn(string username, string password);
 
         [OperationContract]
-        string[] GetAccountsNumbers(string token);
+        List<AccountEntry> GetAccountsNumbers(string token); 
 
         [OperationContract]
         List<OperationEntry> GetAccountHistory(string accountNumber, string token);
+
+        [OperationContract]
+        string TransferRequest(OperationEntry operation, string token);
+
+        [OperationContract]
+        string CreateNewAccount(string token);
 
     }
 
@@ -40,6 +46,16 @@ namespace BSRBank
 
         [DataMember]
         public string Source { get; set; }
+
+        [DataMember]
+        public int Amount { get; set; }
+    }
+
+    [DataContract]
+    public class AccountEntry
+    {
+        [DataMember]
+        public string AccountNumber { get; set; }
 
         [DataMember]
         public int Amount { get; set; }

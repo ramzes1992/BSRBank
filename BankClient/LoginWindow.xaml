@@ -1,0 +1,30 @@
+﻿<Window x:Class="BankClient.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankClient"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="153.061" Width="293.878">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right">Username:</Label>
+        <Label Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right">Password:</Label>
+
+        <TextBox Name="v_TextBox_Username" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5,0"></TextBox>
+        <PasswordBox Name="v_PasswordBox_Password" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="5,0"></PasswordBox>
+
+        <Button Name="v_Button_Login" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Click="v_Button_Login_Click" IsDefault="True">Login</Button>
+
+    </Grid>
+</Window>

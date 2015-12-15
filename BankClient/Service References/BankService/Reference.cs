@@ -15,6 +15,67 @@ namespace BankClient.BankService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="AccountEntry", Namespace="http://schemas.datacontract.org/2004/07/BSRBank")]
+    [System.SerializableAttribute()]
+    public partial class AccountEntry : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AccountNumberField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int AmountField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AccountNumber {
+            get {
+                return this.AccountNumberField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AccountNumberField, value) != true)) {
+                    this.AccountNumberField = value;
+                    this.RaisePropertyChanged("AccountNumber");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Amount {
+            get {
+                return this.AmountField;
+            }
+            set {
+                if ((this.AmountField.Equals(value) != true)) {
+                    this.AmountField = value;
+                    this.RaisePropertyChanged("Amount");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="OperationEntry", Namespace="http://schemas.datacontract.org/2004/07/BSRBank")]
     [System.SerializableAttribute()]
     public partial class OperationEntry : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -123,16 +184,28 @@ namespace BankClient.BankService {
         System.Threading.Tasks.Task<string> LogInAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/GetAccountsNumbers", ReplyAction="http://tempuri.org/IBankService/GetAccountsNumbersResponse")]
-        string[] GetAccountsNumbers(string token);
+        BankClient.BankService.AccountEntry[] GetAccountsNumbers(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/GetAccountsNumbers", ReplyAction="http://tempuri.org/IBankService/GetAccountsNumbersResponse")]
-        System.Threading.Tasks.Task<string[]> GetAccountsNumbersAsync(string token);
+        System.Threading.Tasks.Task<BankClient.BankService.AccountEntry[]> GetAccountsNumbersAsync(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/GetAccountHistory", ReplyAction="http://tempuri.org/IBankService/GetAccountHistoryResponse")]
         BankClient.BankService.OperationEntry[] GetAccountHistory(string accountNumber, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/GetAccountHistory", ReplyAction="http://tempuri.org/IBankService/GetAccountHistoryResponse")]
         System.Threading.Tasks.Task<BankClient.BankService.OperationEntry[]> GetAccountHistoryAsync(string accountNumber, string token);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/TransferRequest", ReplyAction="http://tempuri.org/IBankService/TransferRequestResponse")]
+        string TransferRequest(BankClient.BankService.OperationEntry operation, string token);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/TransferRequest", ReplyAction="http://tempuri.org/IBankService/TransferRequestResponse")]
+        System.Threading.Tasks.Task<string> TransferRequestAsync(BankClient.BankService.OperationEntry operation, string token);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/CreateNewAccount", ReplyAction="http://tempuri.org/IBankService/CreateNewAccountResponse")]
+        string CreateNewAccount(string token);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBankService/CreateNewAccount", ReplyAction="http://tempuri.org/IBankService/CreateNewAccountResponse")]
+        System.Threading.Tasks.Task<string> CreateNewAccountAsync(string token);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -178,11 +251,11 @@ namespace BankClient.BankService {
             return base.Channel.LogInAsync(username, password);
         }
         
-        public string[] GetAccountsNumbers(string token) {
+        public BankClient.BankService.AccountEntry[] GetAccountsNumbers(string token) {
             return base.Channel.GetAccountsNumbers(token);
         }
         
-        public System.Threading.Tasks.Task<string[]> GetAccountsNumbersAsync(string token) {
+        public System.Threading.Tasks.Task<BankClient.BankService.AccountEntry[]> GetAccountsNumbersAsync(string token) {
             return base.Channel.GetAccountsNumbersAsync(token);
         }
         
@@ -192,6 +265,22 @@ namespace BankClient.BankService {
         
         public System.Threading.Tasks.Task<BankClient.BankService.OperationEntry[]> GetAccountHistoryAsync(string accountNumber, string token) {
             return base.Channel.GetAccountHistoryAsync(accountNumber, token);
+        }
+        
+        public string TransferRequest(BankClient.BankService.OperationEntry operation, string token) {
+            return base.Channel.TransferRequest(operation, token);
+        }
+        
+        public System.Threading.Tasks.Task<string> TransferRequestAsync(BankClient.BankService.OperationEntry operation, string token) {
+            return base.Channel.TransferRequestAsync(operation, token);
+        }
+        
+        public string CreateNewAccount(string token) {
+            return base.Channel.CreateNewAccount(token);
+        }
+        
+        public System.Threading.Tasks.Task<string> CreateNewAccountAsync(string token) {
+            return base.Channel.CreateNewAccountAsync(token);
         }
     }
 }

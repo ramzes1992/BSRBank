@@ -4,8 +4,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:21327/BankService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:21327/BankService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost:21327/BankService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-      <xsd:import schemaLocation="http://localhost:21327/BankService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/BSRBank" />
+      <xsd:import schemaLocation="http://localhost:21327/BankService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/BSRBank" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IBankService_GetBankNumber_InputMessage">
@@ -32,6 +31,18 @@
   <wsdl:message name="IBankService_GetAccountHistory_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAccountHistoryResponse" />
   </wsdl:message>
+  <wsdl:message name="IBankService_TransferRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:TransferRequest" />
+  </wsdl:message>
+  <wsdl:message name="IBankService_TransferRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TransferRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IBankService_CreateNewAccount_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewAccount" />
+  </wsdl:message>
+  <wsdl:message name="IBankService_CreateNewAccount_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewAccountResponse" />
+  </wsdl:message>
   <wsdl:portType name="IBankService">
     <wsdl:operation name="GetBankNumber">
       <wsdl:input wsaw:Action="http://tempuri.org/IBankService/GetBankNumber" message="tns:IBankService_GetBankNumber_InputMessage" />
@@ -48,6 +59,14 @@
     <wsdl:operation name="GetAccountHistory">
       <wsdl:input wsaw:Action="http://tempuri.org/IBankService/GetAccountHistory" message="tns:IBankService_GetAccountHistory_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IBankService/GetAccountHistoryResponse" message="tns:IBankService_GetAccountHistory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TransferRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBankService/TransferRequest" message="tns:IBankService_TransferRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBankService/TransferRequestResponse" message="tns:IBankService_TransferRequest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewAccount">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBankService/CreateNewAccount" message="tns:IBankService_CreateNewAccount_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBankService/CreateNewAccountResponse" message="tns:IBankService_CreateNewAccount_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IBankService" type="tns:IBankService">
@@ -81,6 +100,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetAccountHistory">
       <soap:operation soapAction="http://tempuri.org/IBankService/GetAccountHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransferRequest">
+      <soap:operation soapAction="http://tempuri.org/IBankService/TransferRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewAccount">
+      <soap:operation soapAction="http://tempuri.org/IBankService/CreateNewAccount" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

@@ -12,6 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AccountNumber" Type="nvarchar" MaxLength="26" Nullable="false" />
           <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Clients">
           <Key>
@@ -60,6 +61,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AccountNumber" Type="String" MaxLength="26" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -106,6 +108,7 @@
           <EntitySetMapping Name="Accounts">
             <EntityTypeMapping TypeName="Model.Account">
               <MappingFragment StoreEntitySet="Accounts">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />

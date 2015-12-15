@@ -17,5 +17,6 @@ namespace BSRBank
         public int Id { get; set; }
         public string AccountNumber { get; set; }
         public int ClientId { get; set; }
+        public int Amount { get; set; }
     }
 }

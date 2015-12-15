@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
-
+using System.Text.RegularExpressions;
 
 namespace BSRBank
 {
@@ -14,7 +14,7 @@ namespace BSRBank
     public class BankService : IBankService
     {
         const string localBankNumber = "00106068";
-
+        private Random _rand = new Random();
         private Entities _db = new Entities();
 
         public string GetBankNumber()
@@ -22,12 +22,16 @@ namespace BSRBank
             return localBankNumber;
         }
 
-        public string[] GetAccountsNumbers(string token)
+        public List<AccountEntry> GetAccountsNumbers(string token)
         {
             if (IsTokenValid(token))
             {
                 var client = GetClientByToken(token);
-                return _db.Accounts.Where(a => a.ClientId.Equals(client.Id)).Select(a => a.AccountNumber).ToArray();
+                return _db.Accounts.Where(a => a.ClientId.Equals(client.Id)).Select(a => new AccountEntry()
+                {
+                    AccountNumber = a.AccountNumber,
+                    Amount = a.Amount,
+                }).ToList();
             }
 
             throw new FaultException("Invalid Token");
@@ -55,24 +59,24 @@ namespace BSRBank
 
         public List<OperationEntry> GetAccountHistory(string accountNumber, string token)
         {
-            if(IsTokenValid(token))
+            if (IsTokenValid(token))
             {
-                var clientId = _db.Sessions.Single(s => s.Token.Equals(token)).ClientId;
+                var clientId = GetClientByToken(token).Id;
                 var clientAccount = _db.Accounts
                     .SingleOrDefault(a => a.ClientId.Equals(clientId)
                     && a.AccountNumber.Equals(accountNumber));
 
-                if(clientAccount != null)
+                if (clientAccount != null)
                 {
                     return _db.Operations
                         .Where(o => o.Destination.Equals(accountNumber)
-                                    && o.Source.Equals(accountNumber)).Select(o => new OperationEntry()
+                                    || o.Source.Equals(accountNumber)).Select(o => new OperationEntry()
                                     {
                                         Amount = o.Amount,
                                         Source = o.Source,
                                         Destination = o.Destination,
-                                        Date = o.Date, 
-                                    }).ToList();                   
+                                        Date = o.Date,
+                                    }).ToList();
                 }
                 else
                 {
@@ -81,6 +85,93 @@ namespace BSRBank
             }
 
             throw new FaultException("Invalid Token");
+        }
+
+        public string CreateNewAccount(string token)
+        {
+            if (IsTokenValid(token))
+            {
+                var client = GetClientByToken(token);
+                if (client != null)
+                {
+                    var newAccountNumber = GenerateAccountNumber();
+
+                    _db.Accounts.Add(new Account()
+                    {
+                        AccountNumber = newAccountNumber,
+                        Amount = 0,
+                        ClientId = client.Id,
+                    });
+                    _db.SaveChanges();
+                    return newAccountNumber;
+                }
+                else
+                {
+                    throw new FaultException("Client does not exist");
+                }
+            }
+
+            throw new FaultException("Invalid Token");
+        }
+
+        public string TransferRequest(OperationEntry operation, string token)
+        {
+            if (IsTokenValid(token))
+            {
+                Client client = GetClientByToken(token);
+                Account account = _db.Accounts.SingleOrDefault(a => a.ClientId.Equals(client.Id) && a.AccountNumber.Equals(operation.Source));
+                if (account != null)
+                {
+                    if (operation.Destination.Equals(operation.Source))
+                    {
+                        throw new FaultException("Invalid Destination Account Number");
+                    }
+
+                    if (operation.Amount <= 0 || account.Amount < operation.Amount)
+                    {
+                        throw new FaultException("Invalid amount");
+                    }
+
+                    if (operation.Source.Substring(0, 2) != WyliczNRB(operation.Source.Substring(2)))
+                    {//suma się nie zgadza
+                        throw new FaultException("Invalid Source Check sum");
+                    }
+
+                    if (operation.Destination.Substring(0, 2) != WyliczNRB(operation.Destination.Substring(2)))
+                    {//suma się nie zgadza
+                        throw new FaultException("Invalid Destination Check sum");
+                    }
+
+                    if (operation.Destination.Substring(2, 8).Equals(GetBankNumber()))
+                    {// same bank
+                        // przelew odrazu
+
+                        return "OK";
+                    }
+                    else
+                    {// other bank
+
+                        //if(bank is on the list) TOOD: send request to other bank
+                        //else throw Exception;
+
+                        throw new FaultException("Unrecognize Destination Account Numebr");
+                    }
+                }
+                else
+                {
+                    throw new FaultException("Invalid Account Number");
+                }
+            }
+            else
+            {
+                throw new FaultException("Invalid Token");
+            }
+
+            //TODO: pobrać destination i sprawdzić czy to do mojego banku... 
+            // sprawdzić sumę kontrolną 
+            //Sprawdzić source - i czy jest tyle kasy na koncie....
+            //sprawdzić czy jest autoryzacja
+
         }
 
         private bool IsTokenValid(string token)
@@ -96,5 +187,37 @@ namespace BSRBank
             return _db.Clients.Single(c => c.Id.Equals(clientId));
         }
 
+        private string WyliczNRB(string bban)
+        {
+            if (string.IsNullOrEmpty(bban))
+                throw new ArgumentException("Nie podano numeru rachunku.");
+            bban = bban.Replace(" ", null); // usunięcie ewentualnych spacji
+            if (!Regex.IsMatch(bban, @"^\d{24}$"))
+                throw new ArgumentException("Podany numer rachunku jest nieprawidłowy.");
+
+            string nr2 = bban + "252100"; // A=10, B=11, ..., L=21, ..., P=25 oraz 2 zera
+            int modulo = 0;
+            foreach (char znak in nr2)
+                modulo = (10 * modulo + int.Parse(znak.ToString())) % 97;
+            modulo = 98 - modulo;
+
+            // zwrócenie w postaci czytelnej dla człowieka
+            return modulo.ToString();
+        }
+
+        private string GenerateAccountNumber()
+        {
+            string result = "";
+
+            do
+            {
+                var seed = _rand.Next(1, int.MaxValue).ToString();
+                result = GetBankNumber() + new string('0', 16 - seed.Length) + seed;
+            } while (_db.Accounts.Any(a => a.AccountNumber.Equals(result)));
+
+            result = WyliczNRB(result) + result;
+
+            return result;
+        }
     }
 }

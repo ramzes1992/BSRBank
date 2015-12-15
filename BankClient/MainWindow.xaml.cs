@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankClient.BankService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,21 +24,136 @@ namespace BankClient
         public MainWindow()
         {
             InitializeComponent();
+            this.IsEnabled = false;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            using (var bankService = new BankService.BankServiceClient())
+            var lw = new LoginWindow();
+
+            if (lw.ShowDialog() == true)
             {
+                this.IsEnabled = true;
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private void v_Button_GetAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            using (var client = new BankService.BankServiceClient())
+            {
+                //TODO: get accounts
                 try
                 {
-                    string token = bankService.LogIn("admin", "admin");
-                    var x = bankService.GetAccountsNumbers(token);
+                    var accounts = client.GetAccountsNumbers(TokenHelper.CurrentTokken);
+                    v_ListView_Accounts.ItemsSource = accounts;
                 }
                 catch (Exception ex)
                 {
-                    var x = ex.Message;
+                    MessageBox.Show(ex.Message);
+                    if (ex.Message.Contains("Token"))
+                    {
+                        this.IsEnabled = false;
+                        var lw = new LoginWindow();
+
+                        if (lw.ShowDialog() == true)
+                        {
+                            this.IsEnabled = true;
+                        }
+                        else
+                        {
+                            Close();
+                        }
+                    }
                 }
+            }
+        }
+
+        private void v_ListView_Accounts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject obj = (DependencyObject)e.OriginalSource;
+
+            AccountEntry accountEntry = null;
+
+            while (obj != null && obj != v_ListView_Accounts)
+            {
+                if (obj.GetType() == typeof(ListViewItem))
+                {
+                    accountEntry = (obj as ListViewItem).Content as AccountEntry;
+                    break;
+                }
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+
+            if (accountEntry != null)
+            {
+                using (var client = new BankService.BankServiceClient())
+                {
+                    try
+                    {
+                        var history = client.GetAccountHistory(accountEntry.AccountNumber, TokenHelper.CurrentTokken);
+                        v_ListView_History.ItemsSource = history;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        if (ex.Message.Contains("Token"))
+                        {
+                            this.IsEnabled = false;
+                            var lw = new LoginWindow();
+
+                            if (lw.ShowDialog() == true)
+                            {
+                                this.IsEnabled = true;
+                            }
+                            else
+                            {
+                                Close();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void v_Button_CreateAccount_Click(object sender, RoutedEventArgs e)
+        {
+            using (var client = new BankService.BankServiceClient())
+            {
+                try
+                {
+                    var accountNumber = client.CreateNewAccount(TokenHelper.CurrentTokken);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    if (ex.Message.Contains("Token"))
+                    {
+                        this.IsEnabled = false;
+                        var lw = new LoginWindow();
+
+                        if (lw.ShowDialog() == true)
+                        {
+                            this.IsEnabled = true;
+                        }
+                        else
+                        {
+                            Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void v_Button_Transfer_Click(object sender, RoutedEventArgs e)
+        {
+            var tw = new TransferWindow((v_ListView_Accounts.SelectedItem as AccountEntry).AccountNumber);
+            if(tw.ShowDialog() == true)
+            {
+                MessageBox.Show("Done!");
             }
         }
     }
