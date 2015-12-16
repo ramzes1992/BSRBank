@@ -95,6 +95,9 @@ namespace BankClient.BankService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string SourceField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TitleField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -153,6 +156,19 @@ namespace BankClient.BankService {
                 if ((object.ReferenceEquals(this.SourceField, value) != true)) {
                     this.SourceField = value;
                     this.RaisePropertyChanged("Source");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Title {
+            get {
+                return this.TitleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TitleField, value) != true)) {
+                    this.TitleField = value;
+                    this.RaisePropertyChanged("Title");
                 }
             }
         }

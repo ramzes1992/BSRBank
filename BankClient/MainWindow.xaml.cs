@@ -156,5 +156,17 @@ namespace BankClient
                 MessageBox.Show("Done!");
             }
         }
+
+        private void v_ListView_Accounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(v_ListView_Accounts.SelectedItems.Count > 0)
+            {
+                v_Button_Transfer.IsEnabled = true;
+            }
+            else
+            {
+                v_Button_Transfer.IsEnabled = false;
+            }
+        }
     }
 }

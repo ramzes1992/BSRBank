@@ -144,7 +144,8 @@ namespace BSRBank
 
                     if (operation.Destination.Substring(2, 8).Equals(GetBankNumber()))
                     {// same bank
-                        // przelew odrazu
+
+                        TransferToLocalAccount(operation);
 
                         return "OK";
                     }
@@ -167,11 +168,28 @@ namespace BSRBank
                 throw new FaultException("Invalid Token");
             }
 
-            //TODO: pobrać destination i sprawdzić czy to do mojego banku... 
-            // sprawdzić sumę kontrolną 
-            //Sprawdzić source - i czy jest tyle kasy na koncie....
-            //sprawdzić czy jest autoryzacja
+        }
 
+        private void TransferToLocalAccount(OperationEntry operation)
+        {
+            Operation op = new Operation()
+            {
+                Amount = operation.Amount,
+                Date = DateTime.Now,
+                Destination = operation.Destination,
+                Source = operation.Source,
+                Text = operation.Title,
+            };
+
+            var sourceAccount = _db.Accounts.Single(a => a.AccountNumber.Equals(operation.Source));
+            var destinationAccount = _db.Accounts.Single(a => a.AccountNumber.Equals(operation.Destination));
+
+            sourceAccount.Amount -= operation.Amount;
+            destinationAccount.Amount += operation.Amount;
+
+            _db.Operations.Add(op);
+
+            _db.SaveChanges();
         }
 
         private bool IsTokenValid(string token)
@@ -202,7 +220,7 @@ namespace BSRBank
             modulo = 98 - modulo;
 
             // zwrócenie w postaci czytelnej dla człowieka
-            return modulo.ToString();
+            return string.Format("{0:00}", modulo);
         }
 
         private string GenerateAccountNumber()

@@ -78,8 +78,11 @@
       <DependentUpon>BankDatabase.edmx</DependentUpon>
       <LastGenOutput>BankDatabase.cs</LastGenOutput>
     </Content>
+    <Content Include="BankRestService.svc" />
     <Content Include="BankService.svc" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs">
@@ -100,12 +103,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BankDatabase.edmx</DependentUpon>
     </Compile>
+    <Compile Include="BankRestService.svc.cs">
+      <DependentUpon>BankRestService.svc</DependentUpon>
+    </Compile>
     <Compile Include="BankService.svc.cs">
       <DependentUpon>BankService.svc</DependentUpon>
     </Compile>
     <Compile Include="Client.cs">
       <DependentUpon>BankDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="IBankRestService.cs" />
     <Compile Include="IBankService.cs" />
     <Compile Include="Operation.cs">
       <DependentUpon>BankDatabase.tt</DependentUpon>

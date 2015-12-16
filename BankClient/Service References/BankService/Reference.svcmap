@@ -22,11 +22,12 @@
     <MetadataSource Address="http://localhost:21327/BankService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="BankService.wsdl" MetadataType="Wsdl" ID="b5a834e8-0d9c-4bea-9a11-0235711a9afe" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?wsdl" />
-    <MetadataFile FileName="BankService.xsd" MetadataType="Schema" ID="21e95a35-9078-4790-821b-ce84fb1d1da6" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?xsd=xsd0" />
-    <MetadataFile FileName="BankService.disco" MetadataType="Disco" ID="f9418b97-9303-4197-a862-2d8dc87c6566" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?disco" />
-    <MetadataFile FileName="BankService1.xsd" MetadataType="Schema" ID="a775b7a0-27a4-4161-bd4f-8eb02b66a976" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?xsd=xsd1" />
     <MetadataFile FileName="BankService2.xsd" MetadataType="Schema" ID="9f555f11-08ce-41aa-8320-c22178228bc4" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?xsd=xsd2" />
+    <MetadataFile FileName="BankService.xsd" MetadataType="Schema" ID="21e95a35-9078-4790-821b-ce84fb1d1da6" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?xsd=xsd0" />
+    <MetadataFile FileName="BankService1.wsdl" MetadataType="Wsdl" ID="b23a7318-4b82-4cc7-9b55-3759a76d7286" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="BankService1.xsd" MetadataType="Schema" ID="a775b7a0-27a4-4161-bd4f-8eb02b66a976" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?xsd=xsd1" />
+    <MetadataFile FileName="BankService.disco" MetadataType="Disco" ID="f9418b97-9303-4197-a862-2d8dc87c6566" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?disco" />
+    <MetadataFile FileName="BankService.wsdl" MetadataType="Wsdl" ID="b5a834e8-0d9c-4bea-9a11-0235711a9afe" SourceId="1" SourceUrl="http://localhost:21327/BankService.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

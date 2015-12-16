@@ -12,7 +12,6 @@ namespace BSRBank
     [ServiceContract]
     public interface IBankService
     {
-
         [OperationContract]
         string GetBankNumber();
 
@@ -30,7 +29,6 @@ namespace BSRBank
 
         [OperationContract]
         string CreateNewAccount(string token);
-
     }
 
 
@@ -49,6 +47,9 @@ namespace BSRBank
 
         [DataMember]
         public int Amount { get; set; }
+
+        [DataMember]
+        public string Title { get; set; }
     }
 
     [DataContract]

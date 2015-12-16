@@ -44,6 +44,7 @@ namespace BankClient
                     Source = sourceAccountNumber,
                     Date = DateTime.Now,
                     Destination = v_TextBox_Destination.Text,
+                    Title = v_TextBox_AdditionalText.Text,
                 };
 
                 try
