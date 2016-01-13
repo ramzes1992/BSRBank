@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -154,6 +156,57 @@ namespace BSRBank
 
                         //if(bank is on the list) TOOD: send request to other bank
                         //else throw Exception;
+
+                        try
+                        {   // Open the text file using a stream reader.
+                            using (StreamReader sr = new StreamReader("banksAdresses.txt"))
+                            {
+                                string line;
+                                string foreignBankAddress = string.Empty;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    var data = line.Split(' ');
+                                    var bankNumber = data[0];
+                                    var bankAddress = data[1];
+
+                                    if (bankAddress.Equals(operation.Destination.Substring(2, 10)))
+                                    {
+                                        foreignBankAddress = bankAddress;
+                                        break;
+                                    }
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(foreignBankAddress))
+                                {
+                                    // send request to foreign bank
+                                    var restClient = new RestClient(foreignBankAddress);
+                                    TransferRequestData requestData = new TransferRequestData();
+                                    requestData.amount = operation.Amount;
+                                    requestData.destination = operation.Destination;
+                                    requestData.source = operation.Source;
+                                    requestData.title = operation.Title;
+
+                                    var restRequest = new RestRequest("TransferRequest", Method.POST);
+                                    restRequest.AddJsonBody(requestData);
+                                    //restRequest.AddParameter("amount", operation.Amount);
+                                    //restRequest.AddParameter("destination", operation.Destination);
+                                    //restRequest.AddParameter("source", operation.Source);
+                                    //restRequest.AddParameter("title", operation.Title);
+                                    //restRequest.JsonSerializer.Serialize(requestData);
+
+                                    var response = restClient.Execute<TransferResponseData>(restRequest);
+                                    var transferResponseData = response.Data;
+                                    //transferResponseDat
+
+
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("The file could not be read:");
+                            Console.WriteLine(e.Message);
+                        }
 
                         throw new FaultException("Unrecognize Destination Account Numebr");
                     }
